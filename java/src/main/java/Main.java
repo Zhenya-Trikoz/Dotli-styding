@@ -46,7 +46,7 @@ public class Main {
 
 
         try {
-            Thread.sleep(1000 * 60 * 5);
+            Thread.sleep(1000 * 60 * 10);
         } catch (InterruptedException e) {
             System.out.println("Thread has been interrupted");
         }
