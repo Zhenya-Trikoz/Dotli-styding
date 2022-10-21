@@ -1,20 +1,21 @@
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class Main {
 
 
     public static void main(String[] args) {
 
-        Action action1 = new Action("AAPL", 100, 141);
-        Action action2 = new Action("COKE", 1000, 387);
-        Action action3 = new Action("IBM", 200, 137);
+        Action action1 = new Action("AAPL", 100, 100);
+        Action action2 = new Action("COKE", 1000, 350);
+        Action action3 = new Action("IBM", 200, 120);
 
-        Action[] actions = new Action[3];
-        actions[0] = action1;
-        actions[1] = action2;
-        actions[2] = action3;
+        ArrayList<Action> actionsList = new ArrayList<>();
+        actionsList.add(action1);
+        actionsList.add(action2);
+        actionsList.add(action3);
 
         Client client1 = new Client("Alice", new Action[]{
                 new Action("AAPL", 10, 100),
@@ -28,22 +29,22 @@ public class Main {
                 new Action("COKE", 300, 370)
         });
 
-        ThreadExchange threadExchange1 = new ThreadExchange("Thread1", action1);
-        ThreadExchange threadExchange2 = new ThreadExchange("Thread2", action2);
-        ThreadExchange threadExchange3 = new ThreadExchange("Thread3", action3);
+        ArrayList<Client> clientsList = new ArrayList<>();
+        clientsList.add(client1);
+        clientsList.add(client2);
+        clientsList.add(client3);
 
-        threadExchange1.start();
-        threadExchange2.start();
-        threadExchange3.start();
+        ThreadExchange threadExchange = null;
+        for (int i = 0; i < actionsList.size(); i++) {
+            threadExchange = new ThreadExchange("ThreadExchange " + (i + 1), actionsList.get(i));
+            threadExchange.start();
+        }
 
-        ThreadBroker threadBroker1 = new ThreadBroker("Thread1Broke", client1, actions);
-        ThreadBroker threadBroker2 = new ThreadBroker("Thread2Broke", client2, actions);
-        ThreadBroker threadBroker3 = new ThreadBroker("Thread3Broke", client3, actions);
-
-        threadBroker1.start();
-        threadBroker2.start();
-        threadBroker3.start();
-
+        ThreadBroker threadBroker = null;
+        for (int i = 0; i < clientsList.size(); i++) {
+            threadBroker = new ThreadBroker("ThreadBroker " + (i + 1), clientsList.get(i), actionsList);
+            threadBroker.start();
+        }
 
         try {
             Thread.sleep(1000 * 60 * 10);
@@ -51,12 +52,8 @@ public class Main {
             System.out.println("Thread has been interrupted");
         }
 
-        threadExchange1.disable();
-        threadExchange2.disable();
-        threadExchange3.disable();
-        threadBroker1.disable();
-        threadBroker2.disable();
-        threadBroker3.disable();
+        threadExchange.disable();
+        threadBroker.disable();
 
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -64,27 +61,20 @@ public class Main {
 
         System.out.println();
         System.out.println("FINAL");
-        for (int i = 0; i < actions.length; i++) {
-            System.out.println(formatDateTime + " Акція " + actions[i].getName() + " кількість " + actions[i].getAmount() + " ціна " + actions[i].getPrice());
+        for (int i = 0; i < actionsList.size(); i++) {
+            System.out.println(formatDateTime + " Акція " + actionsList.get(i).getName() + " кількість " + actionsList.get(i).getAmount() + " ціна " + actionsList.get(i).getPrice());
         }
 
         System.out.println();
-        System.out.println(client1.getName());
-        for (int i = 0; i < client1.getAction().length; i++) {
-            System.out.println(formatDateTime + " Куплено акцій для " + client1.getAction()[i].getName() + " в кількості " + client1.getMassBuyAction()[i]);
+        for (int i = 0; i < clientsList.size(); i++) {
+            System.out.println(clientsList.get(i).getName());
+            for (int a = 0; a < clientsList.get(i).getAction().length; a++) {
+                System.out.println(formatDateTime + " Куплено акцій для " + clientsList.get(i).getAction()[a].getName() + " в кількості " + clientsList.get(i).getMassBuyAction()[a]);
+            }
+            System.out.println();
+
         }
 
-        System.out.println();
-        System.out.println(client2.getName());
-        for (int i = 0; i < client2.getAction().length; i++) {
-            System.out.println(formatDateTime + " Куплено акцій для " + client2.getAction()[i].getName() + " в кількості " + client2.getMassBuyAction()[i]);
-        }
-
-        System.out.println();
-        System.out.println(client3.getName());
-        for (int i = 0; i < client3.getAction().length; i++) {
-            System.out.println(formatDateTime + " Куплено акцій для " + client3.getAction()[i].getName() + " в кількості " + client3.getMassBuyAction()[i]);
-        }
 
     }
 }

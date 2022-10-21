@@ -5,13 +5,13 @@ import java.time.format.DateTimeFormatter;
 
 public class ThreadExchange extends Thread {
     public Action action;
-    private boolean isActive;
+    private static boolean isActive;
 
 
     public ThreadExchange(String name, Action action) {
         super(name);
         this.action = action;
-        this.isActive = true;
+        isActive = true;
     }
 
     void disable() {

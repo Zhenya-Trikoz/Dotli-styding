@@ -5,11 +5,12 @@ public class Client {
 
     private Action[] action;
 
-    private int[] massBuyAction = new int[3];
+    private int[] massBuyAction;
 
     public Client(String name, Action[] action) {
         this.name = name;
         this.action = action;
+        this.massBuyAction = new int[action.length];
     }
 
     public String getName() {
