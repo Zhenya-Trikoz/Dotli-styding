@@ -8,9 +8,9 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Action action1 = new Action("AAPL", 100, 100);
-        Action action2 = new Action("COKE", 1000, 350);
-        Action action3 = new Action("IBM", 200, 120);
+        Action action1 = new Action("AAPL", 100, 141);
+        Action action2 = new Action("COKE", 1000, 387);
+        Action action3 = new Action("IBM", 200, 137);
 
         ArrayList<Action> actionsList = new ArrayList<>();
         actionsList.add(action1);
