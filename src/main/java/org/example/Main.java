@@ -12,7 +12,6 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        Injector injector = Guice.createInjector(new MainModule());
         System.out.println("Напишіть ваш вираз");
         Scanner in = new Scanner(System.in);
         String str = in.nextLine();
@@ -32,23 +31,35 @@ public class Main {
         int x = Integer.parseInt(numberOne);
         int y = Integer.parseInt(numberTwo);
 
-        if (str.charAt(a) == '+') {
+        calculation(x, y, str.charAt(a));
+    }
+
+    public static int calculation(int x, int y, char symbol) {
+        Injector injector = Guice.createInjector(new MainModule());
+
+        if (symbol == '+') {
             Addition addition = injector.getInstance(Addition.class);
             System.out.println(addition.add(x, y));
+            return addition.add(x, y);
 
-        } else if (str.charAt(a) == '-') {
+        } else if (symbol == '-') {
 
             Subtraction subtraction = injector.getInstance(Subtraction.class);
             System.out.println(subtraction.sub(x, y));
+            return subtraction.sub(x, y);
 
-        } else if (str.charAt(a) == '*') {
+        } else if (symbol == '*') {
             Multiplication multiplication = injector.getInstance(Multiplication.class);
             System.out.println(multiplication.mul(x, y));
+            return multiplication.mul(x, y);
 
-        } else if (str.charAt(a) == '/') {
+        } else if (symbol == '/') {
             Division division = injector.getInstance(Division.class);
             System.out.println(division.div(x, y));
+            return division.div(x, y);
 
+        } else {
+            throw new IllegalStateException("Unknown character");
         }
     }
 }
