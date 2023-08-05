@@ -37,62 +37,15 @@ public class ClientSomething {
         }
     }
 
-    public String getBuffRead() {
-        return buffRead;
-    }
-
-    public void setBuffRead(String buffRead) {
-        this.buffRead = buffRead;
-    }
-
-    public String getBuffWrite() {
-        return buffWrite;
-    }
-
-    public void setBuffWrite(String buffWrite) {
-        this.buffWrite = buffWrite;
-    }
 
     public String getStrRead() {
         return strRead;
     }
 
-    public void setStrRead(String strRead) {
-        this.strRead = strRead;
-    }
 
     public String getStrWrite() {
         return strWrite;
     }
-
-    public void setStrWrite(String strWrite) {
-        this.strWrite = strWrite;
-    }
-
-    public Socket getSocket() {
-        return socket;
-    }
-
-    public void setSocket(Socket socket) {
-        this.socket = socket;
-    }
-
-    public BufferedReader getReader() {
-        return reader;
-    }
-
-    public void setReader(BufferedReader reader) {
-        this.reader = reader;
-    }
-
-    public BufferedReader getIn() {
-        return in;
-    }
-
-    public void setIn(BufferedReader in) {
-        this.in = in;
-    }
-
 
     public String getName() {
         return name;
