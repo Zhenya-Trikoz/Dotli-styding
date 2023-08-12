@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"uk.trikoz.evgen.springBooks"},{"l":"uk.trikoz.evgen.springBooks.controller"},{"l":"uk.trikoz.evgen.springBooks.exception"},{"l":"uk.trikoz.evgen.springBooks.model"},{"l":"uk.trikoz.evgen.springBooks.repository"},{"l":"uk.trikoz.evgen.springBooks.service"}];updateSearchResults();
