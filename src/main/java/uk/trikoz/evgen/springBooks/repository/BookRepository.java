@@ -1,173 +1,70 @@
 package uk.trikoz.evgen.springBooks.repository;
 
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import uk.trikoz.evgen.springBooks.model.Book;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
- * This class provides database access methods for managing books.
+ * The repository interface for accessing and manipulating Book entities in the database.
  */
 @Repository
-public class BookRepository implements BookRepositoryInterface {
-    /*
-     * The 'url' variable stores the database address.
-     */
-    public static String url = "jdbc:mysql://localhost:3306/book";
-    public static String username = "root";
-    public static String password = "password";
+public interface BookRepository extends JpaRepository<Book, Integer> {
 
     /**
-     * Constructor for creating a database connection.
-     */
-    public BookRepository() {
-        Connection connection = getConnection();
-    }
-
-    /**
-     * Get a database connection.
+     * Retrieves a list of all books in the database.
      *
-     * @return The database connection.
+     * @return A list of books.
      */
-    @Override
-    public Connection getConnection() {
-        Connection connection = null;
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection(url, username, password);
-        } catch (SQLException e) {
-            System.out.println("Database connection failed!");
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return connection;
-    }
+    @Transactional(readOnly = true)
+    @Query(value = "SELECT * FROM books", nativeQuery = true)
+    List<Book> readBooks();
 
     /**
-     * Retrieve a collection of all books from the database.
+     * Inserts a new book into the database.
      *
-     * @return A collection of books.
+     * @param book The book to be inserted.
      */
-    @Override
-    public Collection<Book> readBooks() {
-        List<Book> bookList = new ArrayList<>();
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQLBook.readBook)) {
-
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                Book book = new Book(
-                        resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("author"),
-                        resultSet.getInt("year"),
-                        resultSet.getString("genre"));
-                bookList.add(book);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return Collections.unmodifiableList(bookList);
-
-    }
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO `books` (`name`, `author`, `year`, `genre`) VALUES (:#{#book.name}, :#{#book.author}, :#{#book.year}, :#{#book.genre})", nativeQuery = true)
+    void createBook(@Param("book") Book book);
 
     /**
-     * Create a new book in the database.
+     * Updates an existing book in the database.
      *
-     * @param book The book to be created.
+     * @param book The updated book information.
      */
-    @Override
-    public void createBook(Book book) {
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQLBook.createBook)) {
-
-            statement.setString(1, book.getName());
-            statement.setString(2, book.getAuthor());
-            statement.setInt(3, book.getYear());
-            statement.setString(4, book.getGenre());
-
-            statement.executeUpdate();
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE books SET name = :#{#book.name}, author = :#{#book.author}, year = :#{#book.year}, genre = :#{#book.genre} WHERE id = :#{#book.id}", nativeQuery = true)
+    void updateBook(@Param("book") Book book);
 
     /**
-     * Update an existing book's information in the database.
+     * Deletes a book from the database by its ID.
      *
-     * @param book The book with updated information.
+     * @param id The ID of the book to be deleted.
      */
-    @Override
-    public void updateBook(Book book) {
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQLBook.updateBook)) {
-
-            statement.setString(1, book.getName());
-            statement.setString(2, book.getAuthor());
-            statement.setInt(3, book.getYear());
-            statement.setString(4, book.getGenre());
-            statement.setInt(5, book.getId());
-
-            statement.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM books WHERE id = :id", nativeQuery = true)
+    void deleteBook(@Param("id") int id);
 
     /**
-     * Delete a book from the database by its id.
+     * Retrieves a book from the database by its ID.
      *
-     * @param id The id of the book to be deleted.
+     * @param id The ID of the book to be retrieved.
+     * @return The retrieved book, or null if not found.
      */
-    @Override
-    public void deleteBook(int id) {
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQLBook.deleteBook)) {
-
-            statement.setInt(1, id);
-
-            statement.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Find a book in the database by its id.
-     *
-     * @param id The id of the book to be found.
-     * @return The book found by id, or null if not found.
-     */
-    @Override
-    public Book findBookId(int id) {
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQLBook.findBookId)) {
-
-            statement.setInt(1, id);
-
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return new Book(
-                        resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("author"),
-                        resultSet.getInt("year"),
-                        resultSet.getString("genre"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+    @Transactional
+    @Query(value = "SELECT * FROM books WHERE id = :id", nativeQuery = true)
+    Book findBookId(@Param("id") int id);
 }
+
 

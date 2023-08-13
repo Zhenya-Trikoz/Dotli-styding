@@ -44,6 +44,7 @@ public class BookService implements BookServiceInterface {
      * @throws BookException If the book is already registered or if input data is invalid.
      */
     @Override
+
     public void createBook(Book book) throws BookException {
         if (bookRepository.readBooks().contains(book)) {
             throw new BookException(
@@ -58,6 +59,7 @@ public class BookService implements BookServiceInterface {
             }
         }
     }
+
 
     /**
      * Update an existing book's information by id.
@@ -96,10 +98,9 @@ public class BookService implements BookServiceInterface {
      *
      * @param id The id of the book to be found.
      * @return The book found by id, or throw BookException if not found.
-     * @throws BookException If the book with the specified id is not found.
      */
     @Override
-    public Book findBookId(int id) throws BookException {
+    public Book findBookId(int id) {
         Book book = bookRepository.findBookId(id);
 
         if (book == null) {

@@ -1,12 +1,18 @@
 package uk.trikoz.evgen.springBooks.model;
 
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
 /**
  * The Book class, which represents the essence of the book
  */
+@Entity
+@Table(name = "books")
 public class Book {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     private String author;
@@ -43,6 +49,10 @@ public class Book {
         this.author = author;
         this.year = year;
         this.genre = genre;
+    }
+
+    public Book() {
+
     }
 
     public int getId() {

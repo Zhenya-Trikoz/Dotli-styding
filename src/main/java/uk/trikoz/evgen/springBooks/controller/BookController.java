@@ -24,7 +24,7 @@ public class BookController implements BookControllerInterface {
      *
      * @return The count of books.
      */
-    @Override
+
     @GetMapping("/count")
     public int getCountBook() {
         return bookService.getCountBook();
@@ -35,7 +35,7 @@ public class BookController implements BookControllerInterface {
      *
      * @return Collection of books.
      */
-    @Override
+
     @GetMapping("/readBooks")
     public Collection<Book> readBooks() {
         return bookService.readBooks();
@@ -50,7 +50,7 @@ public class BookController implements BookControllerInterface {
      * @param year   The publication year of the book.
      * @param genre  The genre of the book.
      */
-    @Override
+
     @PutMapping("/createBook")
     public void createBook(@RequestParam String name, String author, int year, String genre) {
         Book book = new Book(name, author, year, genre);
@@ -67,7 +67,7 @@ public class BookController implements BookControllerInterface {
      * @param year   The new publication year of the book.
      * @param genre  The new genre of the book.
      */
-    @Override
+
     @PutMapping("/updateBook")
     public void updateBook(@RequestParam int id, String name, String author, int year, String genre) {
         Book book = new Book(id, name, author, year, genre);
